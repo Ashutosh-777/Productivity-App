@@ -34,7 +34,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(14)),
               width: MediaQuery.of(context).size.width / 1.2,
-              height: MediaQuery.of(context).size.height/2,
+              height: MediaQuery.of(context).size.height / 2,
               child: Column(
                 children: [
                   const Image(
@@ -51,7 +51,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 4,right: 4),
+                    padding: const EdgeInsets.only(left: 4, right: 4),
                     child: TextField(
                       cursorColor: Colors.grey,
                       cursorHeight: 24,
@@ -64,7 +64,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                         fillColor: Color(0xff437BFF),
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
-                            color:Color(0xff437BFF),
+                            color: Color(0xff437BFF),
                           ),
                           borderRadius: BorderRadius.circular(14),
                         ),
@@ -89,7 +89,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 4,right: 4),
+                    padding: const EdgeInsets.only(left: 4, right: 4),
                     child: TextField(
                       cursorColor: Colors.grey,
                       cursorHeight: 24,
@@ -102,7 +102,7 @@ class _sign_up_pageState extends State<sign_up_page> {
                         fillColor: const Color(0xff437BFF),
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
-                            color:Color(0xff437BFF),
+                            color: Color(0xff437BFF),
                           ),
                           borderRadius: BorderRadius.circular(14),
                         ),
@@ -122,76 +122,78 @@ class _sign_up_pageState extends State<sign_up_page> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextButton(
-                            onPressed: ()async{
-                              try {
-                                final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                                  email: emailAddress.text,
-                                  password: password.text,
-                                );
-                                // Navigator.pushReplacement(
-                                //   context,
-                                //   MaterialPageRoute(builder: (BuildContext context)=> const Login_page()),
-                                // );
-                              } on FirebaseAuthException catch (e) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Error'),
-                                      content: Text(e.toString()),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text('OK'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              } catch (e) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Error'),
-                                      content: Text(e.toString()),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text('OK'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-
-                            },
-                            child: const Text('Sign-up',
-                              style: TextStyle(
-                                fontSize: 18,
-                              ),
+                          onPressed: () async {
+                            try {
+                              final credential = await FirebaseAuth.instance
+                                  .createUserWithEmailAndPassword(
+                                email: emailAddress.text,
+                                password: password.text,
+                              );
+                              // Navigator.pushReplacement(
+                              //   context,
+                              //   MaterialPageRoute(builder: (BuildContext context)=> const Login_page()),
+                              // );
+                            } on FirebaseAuthException catch (e) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Error'),
+                                    content: Text(e.toString()),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('OK'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            } catch (e) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Error'),
+                                    content: Text(e.toString()),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('OK'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          },
+                          child: const Text(
+                            'Sign-up',
+                            style: TextStyle(
+                              fontSize: 18,
                             ),
+                          ),
                         ),
                         TextButton(
-                            onPressed: (){
+                            onPressed: () {
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (BuildContext context)=> const Login_page()),
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const Login_page()),
                               );
                             },
-                            child: const Text('Already have an account?',
+                            child: const Text(
+                              'Already have an account?',
                               style: TextStyle(
                                 fontSize: 18,
                                 //color: Color(0xff437BFF),
-
                               ),
-                            )
-                        )
+                            ))
                       ],
                     ),
                   )
@@ -204,4 +206,3 @@ class _sign_up_pageState extends State<sign_up_page> {
     );
   }
 }
-

@@ -1,46 +1,24 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
 import 'model.dart';
+
 class get_Quotes {
   static Future<List<dynamic>> getQuotes() async {
-    var uri = Uri.parse(
-        'https://type.fit/api/quotes');
+    var uri = Uri.parse('https://type.fit/api/quotes');
     final response = await http.get(uri);
     final body = jsonDecode(response.body);
-    List<Quotes> abc=[];
+    List<Quotes> abc = [];
 
-    for(int i=0;i<body.length ;i++){
+    for (int i = 0; i < body.length; i++) {
       // print(body[i]['text']);
-      abc.add(
-        Quotes(
-            text: body[i]['text'])
-      );
+      abc.add(Quotes(text: body[i]['text']));
     }
-    return abc ;
+    return abc;
   }
 }
-class obtaining_quotes extends StatelessWidget {
-  const obtaining_quotes({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: get_Quotes.getQuotes(),
-      builder: (context,snapshot){
-        if(snapshot.hasError){
-          return Text('Error');
-        }else if(snapshot.hasData){
-          final quote=snapshot.data;
-          return quote?[2].text;
-        }else{
-          return const CircularProgressIndicator();
-        }
-      },
-    );
-  }
-}
 
 
 

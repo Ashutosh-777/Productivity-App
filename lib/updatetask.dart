@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -5,28 +7,33 @@ import 'package:intl/intl.dart';
 import 'package:productivity_app/Task-model.dart';
 import 'package:productivity_app/profilepage.dart';
 
+var counter = 0;
 // void main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
 //   await Firebase.initializeApp();
-//   runApp(MaterialApp(debugShowCheckedModeBanner: false, home: Add_task()));
+//   runApp(MaterialApp(debugShowCheckedModeBanner: false, home: update_task()));
 // }
 
 //Add_task page
-class Add_task extends StatefulWidget {
+class update_task extends StatefulWidget {
+  final taskmodel task;
+  update_task({required this.task});
   @override
-  State<Add_task> createState() => _Add_taskState();
+  State<update_task> createState() => _update_taskState();
 }
 
-class _Add_taskState extends State<Add_task> {
+class _update_taskState extends State<update_task> {
   //const Add_task({Key? key}) : super(key: key);
   TextEditingController dateCtl = TextEditingController();
 
-  TextEditingController titlefortask = TextEditingController();
-
   TextEditingController descriptionfortask = TextEditingController();
+  var title_update = '';
+  var deadline_update = '';
+  var category_update;
+  bool iscompleted_update = false;
+  var description_update = '';
 
-  var category;
-
+  bool iscompleted = false;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -45,17 +52,18 @@ class _Add_taskState extends State<Add_task> {
                   color: Colors.orange,
                   borderRadius: BorderRadius.circular(14)),
               // width: MediaQuery.of(context).size.width / 1.2,
-              height: MediaQuery.of(context).size.height / 2.4,
+              // height: MediaQuery.of(context).size.height / 2.4,
               //height: MediaQuery.of(context).size.height/2.8,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Padding(
                     padding: EdgeInsets.only(
                       top: 90,
-                      right: 120,
+                      right: 220,
                     ),
                     child: Text(
-                      'Create a new Task',
+                      'Edit Task',
                       style: TextStyle(
                           fontSize: 36,
                           color: Colors.black,
@@ -63,7 +71,7 @@ class _Add_taskState extends State<Add_task> {
                     ),
                   ),
                   const Padding(
-                    padding: EdgeInsets.only(right: 380, top: 20),
+                    padding: EdgeInsets.only(top: 20),
                     child: Text(
                       'Title',
                       style: TextStyle(),
@@ -71,16 +79,18 @@ class _Add_taskState extends State<Add_task> {
                   ),
                   Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: titlefortask,
-                      onTap: () {},
+                    child: TextFormField(
+                      onChanged: (value) => {
+                        title_update = value,
+                      },
+                      initialValue: widget.task.title,
                       decoration: const InputDecoration(
                         hintText: 'Title',
                       ),
                     ),
                   ),
                   const Padding(
-                    padding: EdgeInsets.only(right: 350, top: 20),
+                    padding: EdgeInsets.only(top: 20),
                     child: Text(
                       'Due Date',
                       style: TextStyle(),
@@ -88,8 +98,8 @@ class _Add_taskState extends State<Add_task> {
                   ),
                   Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: dateCtl,
+                    child: TextFormField(
+                      initialValue: widget.task.deadline,
                       decoration: const InputDecoration(
                         labelText: "Deadline",
                         hintText: "Deadline",
@@ -104,7 +114,8 @@ class _Add_taskState extends State<Add_task> {
                             firstDate: DateTime(2023),
                             lastDate: DateTime(2100));
 
-                        dateCtl.text = DateFormat("dd-MM-yyyy").format(date!);
+                        deadline_update =
+                            DateFormat("dd-MM-yyyy").format(date!);
                       },
                     ),
                   ),
@@ -113,10 +124,13 @@ class _Add_taskState extends State<Add_task> {
             ),
             Padding(
               padding: EdgeInsets.only(top: 16, left: 8, right: 8),
-              child: TextField(
+              child: TextFormField(
+                initialValue: widget.task.description,
                 minLines: 1,
                 maxLines: 3,
-                controller: descriptionfortask,
+                onChanged: (value) {
+                  description_update = value;
+                },
                 decoration: const InputDecoration(
                   labelText: "Description",
                   hintText: "Description",
@@ -146,7 +160,7 @@ class _Add_taskState extends State<Add_task> {
                           ),
                           child: ElevatedButton(
                               onPressed: () {
-                                category = 'ACAEDMICS';
+                                category_update = 'ACAEDMICS';
                               },
                               child: const Text('ACAEDMICS')),
                         ),
@@ -156,7 +170,7 @@ class _Add_taskState extends State<Add_task> {
                           ),
                           child: ElevatedButton(
                               onPressed: () {
-                                category = 'CO-CURRICULAR';
+                                category_update = 'CO-CURRICULAR';
                               },
                               child: const Text('CO-CURRICULAR')),
                         ),
@@ -166,7 +180,7 @@ class _Add_taskState extends State<Add_task> {
                           ),
                           child: ElevatedButton(
                               onPressed: () {
-                                category = 'PERSONALITY';
+                                category_update = 'PERSONALITY';
                               },
                               child: const Text('PERSONALITY')),
                         ),
@@ -186,7 +200,7 @@ class _Add_taskState extends State<Add_task> {
                           ),
                           child: ElevatedButton(
                               onPressed: () {
-                                category = 'SPORTS';
+                                category_update = 'SPORTS';
                               },
                               child: const Text('SPORTS')),
                         ),
@@ -196,7 +210,7 @@ class _Add_taskState extends State<Add_task> {
                           ),
                           child: ElevatedButton(
                               onPressed: () {
-                                category = 'TECHNICAL';
+                                category_update = 'TECHNICAL';
                               },
                               child: const Text('TECHNICAL')),
                         ),
@@ -206,7 +220,7 @@ class _Add_taskState extends State<Add_task> {
                           ),
                           child: ElevatedButton(
                               onPressed: () {
-                                category = 'MEDITATION';
+                                category_update = 'MEDITATION';
                               },
                               child: const Text('MEDITATION')),
                         ),
@@ -226,7 +240,7 @@ class _Add_taskState extends State<Add_task> {
                           ),
                           child: ElevatedButton(
                               onPressed: () {
-                                category = 'GROCERIES';
+                                category_update = 'GROCERIES';
                               },
                               child: const Text('GROCERIES')),
                         ),
@@ -236,7 +250,7 @@ class _Add_taskState extends State<Add_task> {
                           ),
                           child: ElevatedButton(
                               onPressed: () {
-                                category = 'MARKET';
+                                category_update = 'MARKET';
                               },
                               child: const Text('MARKET')),
                         ),
@@ -246,13 +260,26 @@ class _Add_taskState extends State<Add_task> {
                           ),
                           child: ElevatedButton(
                               onPressed: () {
-                                category = 'E-GAMING';
+                                category_update = 'E-GAMING';
                               },
                               child: const Text('E-GAMING')),
                         ),
                       ],
                     ),
                   ),
+                  Row(
+                    children: [
+                      Text('Mark as completed'),
+                      Checkbox(
+                        value: iscompleted_update,
+                        onChanged: (value) {
+                          setState(() {
+                            iscompleted_update = value!;
+                          });
+                        },
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -279,22 +306,26 @@ class _Add_taskState extends State<Add_task> {
                       shadowColor: Colors.white24,
                     ),
                     onPressed: () {
-                      CreateTask(taskmodel(
-                          title: titlefortask.text,
-                          category: category,
-                          deadline: dateCtl.text,
-                          description: descriptionfortask.text,
-                          ID: DateTime.now().toString(),
-                          iscompleted: false));
-                      titlefortask.clear();
-                      category.clear();
-                      descriptionfortask.clear();
-                      dateCtl.clear();
+                      category_update ??= widget.task.category;
+                      title_update ??= widget.task.title;
+                      description_update ??= widget.task.description;
+                      deadline_update;
+                      Updatetask(taskmodel(
+                          title: title_update,
+                          category: category_update,
+                          deadline: deadline_update,
+                          description: description_update,
+                          ID: widget.task.ID,
+                          iscompleted: iscompleted_update));
+                      if (iscompleted == true) {
+                        Deletetask(widget.task.ID);
+                      }
+                      Navigator.pop(context);
                     },
                     child: const Padding(
                       padding: EdgeInsets.all(18.0),
                       child: Text(
-                        'Create Task',
+                        'Update Task',
                         style: TextStyle(fontSize: 28),
                       ),
                     )),
@@ -307,14 +338,15 @@ class _Add_taskState extends State<Add_task> {
   }
 }
 
-Future CreateTask(taskmodel task) async {
-  final docMessage =
+Future Updatetask(taskmodel task) async {
+  print(task.ID);
+  final docUser =
       FirebaseFirestore.instance.collection(username.text).doc(task.ID);
-  final task1 = task;
-  final a = FirebaseFirestore.instance
-      .collection('Tasks')
-      .orderBy('deadline', descending: true)
-      .snapshots();
-  final json = task1.toJson();
-  await docMessage.set(json);
+  final json = task.toJson();
+  await docUser.update(json);
+}
+
+Future Deletetask(id) async {
+  final docUser = FirebaseFirestore.instance.collection(username.text).doc(id);
+  await docUser.delete();
 }

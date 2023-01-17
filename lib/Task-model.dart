@@ -3,11 +3,15 @@ class taskmodel{
   String description;
   String deadline;
   String category;
+  String ID;
+  bool iscompleted;
   taskmodel({
     required this.title,
     required this.category,
     required this.deadline,
     required this.description,
+    required this.ID,
+    required this.iscompleted,
 });
   Map<String,dynamic> toJson() {
     return {
@@ -15,6 +19,8 @@ class taskmodel{
       'description':description,
       'deadline': deadline,
       'category':category,
+      'ID':ID,
+      'iscompleted':iscompleted,
     };
   }
   static taskmodel fromjson(Map<String,dynamic> json){
@@ -23,6 +29,8 @@ class taskmodel{
       category: json['category'],
       deadline: json['deadline'],
       description: json['description'],
+      ID: json['ID'],
+      iscompleted: json['iscompleted']
 
     );
   }

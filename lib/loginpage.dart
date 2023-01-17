@@ -1,11 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:particles_flutter/particles_flutter.dart';
+import 'package:productivity_app/homepage.dart';
+import 'package:productivity_app/profilepage.dart';
 import 'package:productivity_app/signup_page.dart';
 import 'animations.dart';
-class Login_page extends StatelessWidget {
+
+class Login_page extends StatefulWidget {
   const Login_page({Key? key}) : super(key: key);
 
+  @override
+  State<Login_page> createState() => _Login_pageState();
+}
+
+class _Login_pageState extends State<Login_page> {
+  final TextEditingController emailAddress = TextEditingController();
+  final TextEditingController password = TextEditingController();
+  var email1;
+  var pass_word;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +36,7 @@ class Login_page extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(14)),
               width: MediaQuery.of(context).size.width / 1.2,
-              height: MediaQuery.of(context).size.height/2,
+              height: MediaQuery.of(context).size.height / 2,
               child: Column(
                 children: [
                   const Image(
@@ -41,8 +53,11 @@ class Login_page extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 4,right: 4),
+                    padding: const EdgeInsets.only(left: 4, right: 4),
                     child: TextField(
+                      onChanged: (value) {
+                        email1 = value;
+                      },
                       cursorColor: Colors.grey,
                       cursorHeight: 24,
                       style: const TextStyle(
@@ -54,7 +69,7 @@ class Login_page extends StatelessWidget {
                         fillColor: Color(0xff437BFF),
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
-                            color:Color(0xff437BFF),
+                            color: Color(0xff437BFF),
                           ),
                           borderRadius: BorderRadius.circular(14),
                         ),
@@ -65,7 +80,7 @@ class Login_page extends StatelessWidget {
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
-                      //controller: emailAddress,
+                      controller: emailAddress,
                     ),
                   ),
                   const Padding(
@@ -79,7 +94,7 @@ class Login_page extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 4,right: 4),
+                    padding: const EdgeInsets.only(left: 4, right: 4),
                     child: TextField(
                       cursorColor: Colors.grey,
                       cursorHeight: 24,
@@ -92,7 +107,7 @@ class Login_page extends StatelessWidget {
                         fillColor: const Color(0xff437BFF),
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
-                            color:Color(0xff437BFF),
+                            color: Color(0xff437BFF),
                           ),
                           borderRadius: BorderRadius.circular(14),
                         ),
@@ -103,7 +118,10 @@ class Login_page extends StatelessWidget {
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
-                      //controller: password,
+                      controller: password,
+                      onChanged: (value) {
+                        pass_word = value;
+                      },
                     ),
                   ),
                   SizedBox(
@@ -112,29 +130,67 @@ class Login_page extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextButton(
-                          onPressed: ()async{
-                          },
-                          child: const Text('Login',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
+                            onPressed: () async {
+                              try {
+                                final credential = await FirebaseAuth.instance
+                                    .signInWithEmailAndPassword(
+                                  email: email1,
+                                  password: pass_word,
+                                );
+                                if (!mounted) return;
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                    return profile_page();
+                                  }),
+                                );
+
+                                // namevalue = await prefs.getString("name") ?? "No name found";
+                              } on FirebaseAuthException catch (e) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Error'),
+                                      content: Text(e.toString()),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text('OK'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+
+                                print(e.toString());
+                              }
+                            },
+                            child: const Text(
+                              'login',
+                              style: TextStyle(
+                                fontSize: 24,
+                              ),
+                            )),
                         TextButton(
-                            onPressed: (){
+                            onPressed: () {
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (BuildContext context)=> const sign_up_page()),
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const sign_up_page()),
                               );
                             },
-                            child: const Text('Don\'t have an account?',
+                            child: const Text(
+                              'Don\'t have an account?',
                               style: TextStyle(
                                 fontSize: 18,
                                 //color: Color(0xff437BFF),
-
                               ),
-                            )
-                        )
+                            ))
                       ],
                     ),
                   )
